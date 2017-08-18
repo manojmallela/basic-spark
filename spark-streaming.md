@@ -32,6 +32,12 @@ def deSerializeAvro(bytes: Array[Byte]): CustomAvroClass = {
 ```
 val jsonData: DStream[String] = records.map(avroRecord => avroRecord.toString)
 jsonData.foreachRDD { stringRDD =>
+
+      // Method 1
+      import sqlContext.implicits._
+      stringRDD.toDF()
+      
+      // Method 2
       val sqlContext = SQLContext.getOrCreate(stringRDD.sparkContext)
       val recordsDF: DataFrame = sqlContext.read.json(stringRDD)  
     }
